@@ -1,5 +1,5 @@
 use color_eyre::eyre::Result;
-use digital_garden::write; // doesn't exist right now
+use digital_garden::write;
 use structopt::StructOpt;
 
 /// A CLI for the digital garden

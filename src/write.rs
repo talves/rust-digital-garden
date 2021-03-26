@@ -6,7 +6,7 @@ use std::path::PathBuf;
 const TEMPLATE: &[u8; 2] = b"# ";
 
 pub fn write(garden_path: PathBuf, title: Option<String>) -> Result<()> {
-    dbg!(&garden_path, title);
+    dbg!(&garden_path, &title);
     let (mut file, filepath) = Builder::new()
         .suffix(".md")
         .rand_bytes(5)
@@ -22,10 +22,20 @@ pub fn write(garden_path: PathBuf, title: Option<String>) -> Result<()> {
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
 
+    //use `title` if the user passed it in
+    // otherwise find a heading in the markdown
+    let document_title = title.or_else(|| {
+        contents
+            .lines()
+            .find(|v| v.starts_with("# "))
+            // md headings are required to have `# ` with a space
+            .map(|maybe_line| maybe_line.trim_end_matches("# ").to_string())
+    });
+
     // let template = "# ";
     // let content_from_user = edit::edit(template).wrap_err("unable to read writing")?;
     // dbg!(content_from_user);
 
-    dbg!(contents);
+    dbg!(contents, document_title);
     todo!()
 }

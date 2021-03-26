@@ -22,6 +22,14 @@ cargo install cargo-edit # installs the cargo extended commands to allow for car
 cargo add cargo-eyre # adds a crate for better error messages
 ```
 
+We can run our output and see the result after the structop addition.
+
+```shell
+cargo run -- --help
+# or after
+./target/debug/garden --help
+```
+
 ## Changing the name of the binary
 
 See the cargo.toml for the `bin` option.

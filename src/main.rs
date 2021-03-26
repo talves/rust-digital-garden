@@ -1,6 +1,20 @@
 use color_eyre::eyre::Result;
+use structopt::StructOpt;
+
+#[derive(StructOpt, Debug)]
+struct Opt {
+    #[structopt(subcommand)]
+    cmd: Command,
+}
+
+#[derive(StructOpt, Debug)]
+enum Command {
+    Write { title: Option<String> },
+}
 
 fn main() -> Result<()> {
     color_eyre::install()?;
-    todo!("Make some shit!");
+    let opt = Opt::from_args();
+    dbg!(opt);
+    todo!();
 }

@@ -1,0 +1,15 @@
+[package]
+name = "rust-digital-garden"
+version = "0.1.0"
+authors = ["talves <tony@3alves.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "garden"
+path = "src/main.rs"
+
+[dependencies]
+color-eyre = "0.5.10"
+structopt = "0.3.21"

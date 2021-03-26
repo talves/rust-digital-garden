@@ -30,6 +30,15 @@ cargo run -- --help
 ./target/debug/garden --help
 ```
 
+## Testing (integration)
+
+```shell
+cargo add assert_cmd --dev
+cargo test
+```
+
+An integration test setup not added to our crate, but used during development (--dev)
+
 ## Changing the name of the binary
 
 See the cargo.toml for the `bin` option.

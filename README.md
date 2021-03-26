@@ -39,6 +39,13 @@ cargo test
 
 An integration test setup not added to our crate, but used during development (--dev)
 
+## Adding cargo watch
+
+```shell
+cargo install cargo-watch
+cargo watch -x test
+```
+
 ## Changing the name of the binary
 
 See the cargo.toml for the `bin` option.

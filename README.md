@@ -6,6 +6,16 @@ A CLI tool for the creation of our Digital Garden.
 
 ## Commands
 
+### Setting the garden path
+
+```shell
+GARDEN_PATH=~/git/Rust/rust-digital-garden garden write
+garden -p ~/git/Rust/rust-digital-garden write
+garden --garden_path ~/git/Rust/rust-digital-garden write
+```
+
+### write
+
 Open a new file to write in our digital garden. Since we don't necessarily know what we want to title what we're writing, we'll leave the title as aptional and ask the usre for it later if they don't provide it first.
 
 ```shell

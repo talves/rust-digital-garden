@@ -29,6 +29,6 @@ fn main() -> Result<()> {
     let opt = Opt::from_args();
     dbg!(&opt);
     match opt.cmd {
-        Command::Write { title } => write(),
+        Command::Write { title } => write(title),
     }
 }

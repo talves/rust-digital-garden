@@ -10,6 +10,10 @@ edition = "2018"
 name = "garden"
 path = "src/main.rs"
 
+[lib]
+name = "digital_garden"
+path = "src/lib.rs"
+
 [dependencies]
 color-eyre = "0.5.10"
 structopt = "0.3.21"

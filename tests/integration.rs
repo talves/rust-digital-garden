@@ -6,7 +6,8 @@ fn test_help() -> Result<()> {
   let mut cmd = Command::cargo_bin("garden").unwrap();
   let assert = cmd.arg("--help").assert();
   assert.success().stderr("");
-  Ok(());
+
+  Ok(())
 }
 
 #[test]
@@ -14,5 +15,6 @@ fn test_version() -> Result<()> {
   let mut cmd = Command::cargo_bin("garden").unwrap();
   let assert = cmd.arg("--version").assert();
   assert.success().stderr("");
-  Ok(());
+
+  Ok(())
 }

@@ -47,6 +47,6 @@ fn main() -> Result<()> {
     }?;
     // find our command
     match opt.cmd {
-        Command::Write { title } => write(title),
+        Command::Write { title } => write(garden_path, title),
     }
 }

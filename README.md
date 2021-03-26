@@ -44,6 +44,7 @@ An integration test setup not added to our crate, but used during development (-
 ```shell
 cargo install cargo-watch
 cargo watch -x test
+cargo watch -x check -x test
 ```
 
 ## Changing the name of the binary

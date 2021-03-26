@@ -35,6 +35,7 @@ fn test_write_help() -> Result<()> {
 }
 
 #[test]
+#[ignore] // this is pretty dope, we'll remove (add comment) when implimented!
 /// make sure we have a write sub-command by running `garden write`
 fn test_write() {
   let mut cmd = Command::cargo_bin("garden").unwrap();

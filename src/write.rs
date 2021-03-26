@@ -1,11 +1,31 @@
 use color_eyre::{eyre::WrapErr, Result};
+use edit::{edit_file, Builder};
+use std::io::{Read, Write};
 use std::path::PathBuf;
 
-pub fn write(garden_path: PathBuf, title: Option<String>) -> Result<()> {
-    dbg!(garden_path, title);
-    let template = "# ";
-    let content_from_user = edit::edit(template).wrap_err("unable to read writing")?;
-    dbg!(content_from_user);
+const TEMPLATE: &[u8; 2] = b"# ";
 
+pub fn write(garden_path: PathBuf, title: Option<String>) -> Result<()> {
+    dbg!(&garden_path, title);
+    let (mut file, filepath) = Builder::new()
+        .suffix(".md")
+        .rand_bytes(5)
+        .tempfile_in(&garden_path)
+        .wrap_err("Failed to create WIP file")?
+        .keep()
+        .wrap_err("Failed to keep tempfile")?;
+    file.write_all(TEMPLATE)?;
+    // user edits the file in their fav editor before we read in the contents
+    edit_file(filepath)?;
+
+    // Read in the user's changes back from the file into a string
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+
+    // let template = "# ";
+    // let content_from_user = edit::edit(template).wrap_err("unable to read writing")?;
+    // dbg!(content_from_user);
+
+    dbg!(contents);
     todo!()
 }

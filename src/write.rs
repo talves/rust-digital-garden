@@ -36,7 +36,7 @@ pub fn write(garden_path: PathBuf, title: Option<String>) -> Result<()> {
     let filename = match document_title {
         Some(raw_title) => confirm_filename(&raw_title),
         None => ask_for_filename(),
-    };
+    }?;
 
     dbg!(contents, filename);
 

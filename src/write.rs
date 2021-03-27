@@ -1,7 +1,10 @@
 use color_eyre::{eyre::WrapErr, Result};
 use edit::{edit_file, Builder};
-use std::io::{Read, Seek, SeekFrom, Write};
 use std::path::PathBuf;
+use std::{
+    fs,
+    io::{Read, Seek, SeekFrom, Write},
+};
 
 const TEMPLATE: &[u8; 2] = b"# ";
 
@@ -16,7 +19,7 @@ pub fn write(garden_path: PathBuf, title: Option<String>) -> Result<()> {
         .wrap_err("Failed to keep tempfile")?;
     file.write_all(TEMPLATE)?;
     // user edits the file in their fav editor before we read in the contents
-    edit_file(filepath)?;
+    edit_file(&filepath)?;
 
     // Read in the user's changes back from the file into a string
     let mut contents = String::new();
@@ -38,9 +41,28 @@ pub fn write(garden_path: PathBuf, title: Option<String>) -> Result<()> {
         None => ask_for_filename(),
     }?;
 
-    dbg!(contents, filename);
+    let mut i: usize = 0;
+    loop {
+        let dest_filename = format!(
+            "{}{}",
+            filename,
+            if i == 0 {
+                "".to_string()
+            } else {
+                i.to_string()
+            }
+        );
+        let mut dest = garden_path.join(dest_filename);
+        dest.set_extension("md");
+        if dest.exists() {
+            i = i + 1;
+        } else {
+            fs::rename(filepath, &dest)?;
+            break;
+        }
+    }
 
-    todo!()
+    Ok(())
 }
 
 fn ask_for_filename() -> Result<String> {
@@ -66,7 +88,7 @@ do you want a different title? (y/N): ",
 
         match result.as_str() {
             "y" | "Y" => break ask_for_filename(),
-            "n" | "N" => {
+            "n" | "N" | "" => {
                 // the capital N in the prompt means "default"
                 // so we handle "" as input here
                 break Ok(slug::slugify(raw_title));

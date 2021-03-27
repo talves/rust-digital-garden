@@ -39,7 +39,7 @@ fn get_default_garden_dir() -> Result<PathBuf> {
 fn main() -> Result<()> {
     color_eyre::install()?;
     let opt = Opt::from_args();
-    dbg!(&opt);
+
     // we get the garden path here
     let garden_path = match opt.garden_path {
         Some(pathbuf) => Ok(pathbuf),

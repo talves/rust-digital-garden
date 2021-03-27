@@ -33,10 +33,47 @@ pub fn write(garden_path: PathBuf, title: Option<String>) -> Result<()> {
             .map(|maybe_line| maybe_line.trim_start_matches("# ").to_string())
     });
 
-    // let template = "# ";
-    // let content_from_user = edit::edit(template).wrap_err("unable to read writing")?;
-    // dbg!(content_from_user);
+    let filename = match document_title {
+        Some(raw_title) => confirm_filename(&raw_title),
+        None => ask_for_filename(),
+    };
 
-    dbg!(contents, document_title);
+    dbg!(contents, filename);
+
     todo!()
+}
+
+fn ask_for_filename() -> Result<String> {
+    rprompt::prompt_reply_stderr(
+        "\
+Enter filename
+> ",
+    )
+    .wrap_err("Failed to get filename")
+    .map(|title| slug::slugify(title))
+}
+
+fn confirm_filename(raw_title: &str) -> Result<String> {
+    loop {
+        // prompt default to uppercase character in question tis is a convention, not a requirement
+        let result = rprompt::prompt_reply_stderr(&format!(
+            "\
+current title: `{}`
+do you want a different title? (y/N): ",
+            raw_title,
+        ))
+        .wrap_err("Failed to get input for y/N Question")?;
+
+        match result.as_str() {
+            "y" | "Y" => break ask_for_filename(),
+            "n" | "N" => {
+                // the capital N in the prompt means "default"
+                // so we handle "" as input here
+                break Ok(slug::slugify(raw_title));
+            }
+            _ => {
+                // ask again, because something failed
+            }
+        };
+    }
 }

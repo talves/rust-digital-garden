@@ -1,4 +1,4 @@
-use color_eyre::{eyre::WrapErr, Result};
+use color_eyre::{eyre::WrapErr, owo_colors::OwoColorize, Result};
 use edit::{edit_file, Builder};
 use std::path::PathBuf;
 use std::{
@@ -66,11 +66,14 @@ pub fn write(garden_path: PathBuf, title: Option<String>) -> Result<()> {
 }
 
 fn ask_for_filename() -> Result<String> {
-    rprompt::prompt_reply_stderr(
+    rprompt::prompt_reply_stderr(&format!(
+        "{}",
         "\
 Enter filename
-> ",
-    )
+> "
+        .blue()
+        .bold(),
+    ))
     .wrap_err("Failed to get filename")
     .map(|title| slug::slugify(title))
 }
@@ -80,8 +83,9 @@ fn confirm_filename(raw_title: &str) -> Result<String> {
         // prompt default to uppercase character in question tis is a convention, not a requirement
         let result = rprompt::prompt_reply_stderr(&format!(
             "\
-current title: `{}`
+{} {}
 do you want a different title? (y/N): ",
+            "current title:".green().bold(),
             raw_title,
         ))
         .wrap_err("Failed to get input for y/N Question")?;

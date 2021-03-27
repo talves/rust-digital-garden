@@ -15,9 +15,11 @@ name = "digital_garden"
 path = "src/lib.rs"
 
 [dependencies]
+assert_fs = "1.0.1"
 color-eyre = "0.5.10"
 directories = "3.0.1"
 edit = "0.1.3"
+predicates = "1.0.7"
 rprompt = "1.0.5"
 slug = "0.1.4"
 structopt = "0.3.21"

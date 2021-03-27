@@ -1,5 +1,23 @@
 use assert_cmd::Command;
+use assert_fs::prelude::*;
 use color_eyre::eyre::Result;
+use predicates::prelude::*;
+
+fn setup_command() -> (Command, assert_fs::TempDir) {
+    let temp_dir = assert_fs::TempDir::new().unwrap();
+    let mut cmd = Command::cargo_bin("garden").unwrap();
+    let fake_editor_path = std::env::current_dir()
+        .expect("expected in a dir")
+        .join("tests")
+        .join("fake-editor.sh");
+    if !fake_editor_path.exists() {
+        panic!("fake-editor.sh script could not be found")
+    }
+
+    cmd.env("EDITOR", fake_editor_path.into_os_string())
+        .env("GARDEN_PATH", temp_dir.path());
+    (cmd, temp_dir)
+}
 
 #[test]
 fn test_help() -> Result<()> {
@@ -35,32 +53,47 @@ fn test_write_help() -> Result<()> {
 }
 
 #[test]
-#[ignore] // this is pretty dope, we'll remove (add comment) when implimented!
-/// make sure we have a garden_path option by running `garden -p [--garden_path] write`
-fn test_garden_path() -> Result<()> {
-    let mut cmd = Command::cargo_bin("garden")?;
-    cmd.arg("--garden-path")
-        .arg("~/git/Rust/some-dir")
-        .arg("write")
-        .assert()
-        .success()
-        .stderr("");
-    cmd = Command::cargo_bin("garden")?;
-    cmd.arg("-p")
-        .arg("~/git/Rust/some-dir")
-        .arg("write")
-        .assert()
-        .success()
-        .stderr("");
+// #[ignore] // this is pretty dope, we'll remove (add comment) when implimented!
+/// make sure we have a write sub-command by running `garden write`
+fn test_write_without_filename() {
+    let (mut cmd, temp_dir) = setup_command();
 
-    Ok(())
+    let assert = cmd.arg("write").write_stdin("N\n".as_bytes()).assert();
+
+    assert.success();
+
+    temp_dir
+        .child("testing.md")
+        .assert(predicate::path::exists());
 }
 
 #[test]
-#[ignore] // this is pretty dope, we'll remove (add comment) when implimented!
+// #[ignore] // this is pretty dope, we'll remove (add comment) when implimented!
 /// make sure we have a write sub-command by running `garden write`
 fn test_write() {
-    let mut cmd = Command::cargo_bin("garden").unwrap();
-    let assert = cmd.arg("write").assert();
-    assert.success().stderr("");
+    // let temp_dir = assert_fs::TempDir::new().unwrap();
+
+    // let mut cmd = Command::cargo_bin("garden").unwrap();
+    // let fake_editor_path = std::env::current_dir()
+    //     .expect("expected in a dir")
+    //     .join("tests")
+    //     .join("fake-editor.sh");
+    // if !fake_editor_path.exists() {
+    //     panic!("fake-editor.sh script could not be found")
+    // }
+
+    let (mut cmd, temp_dir) = setup_command();
+
+    let assert = cmd
+        .arg("write")
+        .arg("-t")
+        .arg("atitle")
+        .write_stdin("N\n".as_bytes())
+        .assert();
+
+    assert.success();
+
+    temp_dir
+        .child("atitle.md")
+        .assert(predicate::path::exists());
 }
